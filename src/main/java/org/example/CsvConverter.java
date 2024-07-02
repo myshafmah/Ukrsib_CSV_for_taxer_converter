@@ -56,7 +56,7 @@ public class CsvConverter {
                             columns[4], // dateTime
                             columns[13].isEmpty() ? columns[14] : columns[13], // amount
                             columns[15], // comment
-                            "", // currencyExchange
+                            columns[13].isEmpty() ? "Дохід" : "Витрата", // currencyExchange
                             columns[13].isEmpty() ? "Основний дохід" : "Комісія банку", // mainIncome
                             columns[3].equals("EUR") ? "«ІТ Підприємець» EUR" : "«ІТ Підприємець» UAH", // sourceAccountName
                             columns[3], // sourceAccountCurrency
