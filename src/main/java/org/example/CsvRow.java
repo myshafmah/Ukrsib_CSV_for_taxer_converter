@@ -9,8 +9,8 @@ public class CsvRow {
     private String mainIncome; // основний дохід
     private String sourceAccountName; // назва рахунку з якого виконується обмін
     private String sourceAccountCurrency; // валюта рахунку з якого виконується обмін
-    private String destinationAccountName; // назва рахунку на який будуть переводитись кошти після обміну
-    private String destinationAccountCurrency; // валюта рахунку на який будуть переводитись кошти після обміну
+    private String destinationAccountName; // назва рахунку на який будуть переказувати кошти після обміну
+    private String destinationAccountCurrency; // валюта рахунку на який будуть переказувати кошти після обміну
 
     // Конструктор
     public CsvRow(String taxId, String dateTime, String amount, String comment, String currencyExchange,
@@ -28,7 +28,7 @@ public class CsvRow {
         this.destinationAccountCurrency = destinationAccountCurrency;
     }
 
-    // Геттер для створення рядка CSV
+    // Гетер для створення рядка CSV
     @Override
     public String toString() {
         return String.format("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"",
