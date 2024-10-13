@@ -1,4 +1,4 @@
-package org.example;
+package converter;
 
 public class CsvRow {
     private String taxId; // ІПН/ЄДРПОУ

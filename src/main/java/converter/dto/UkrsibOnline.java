@@ -1,4 +1,4 @@
-package org.example;
+package converter.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CashewToMonoDTO {
-    private String account;
-    private String title;
-    private String note;
+public class UkrsibOnline {
     private String dateTime;          // Дата і час операції
     private String details;           // Деталі операції
     private int mcc;                  // MCC (Merchant Category Code)
@@ -21,14 +18,4 @@ public class CashewToMonoDTO {
     private Double commissionAmount;  // Сума комісій (UAH)
     private Double cashbackAmount;    // Сума кешбеку (UAH)
     private double balanceAfterOperation; // Залишок після операції
-    private boolean income;
-    private String type;
-    private String categoryName;
-    private String subcategoryName;
-    private String color;
-    private String icon;
-    private String emoji;
-    private String budget;
-    private String objective;
 }
-

@@ -1,4 +1,4 @@
-package org.example;
+package converter;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public class DynamicFileReader {
 
-    public static void main(String[] args) {
+    public void dynamicFileReader() {
         String userHome = System.getProperty("user.home"); // Отримуємо шлях до поточного користувача
         String downloadsFolder = userHome + "\\Downloads"; // Шлях до папки Downloads
 
@@ -32,6 +32,7 @@ public class DynamicFileReader {
         }
     }
 
+
     // Метод для пошуку останнього зміненого файлу за шаблоном
     public static Optional<File> findLatestFile(String directoryPath, String filePrefix, String fileExtension) {
         File directory = new File(directoryPath);
@@ -50,4 +51,5 @@ public class DynamicFileReader {
         }
         return Optional.of(latestFile);
     }
+
 }

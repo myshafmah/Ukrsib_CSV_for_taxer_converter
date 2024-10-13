@@ -1,8 +1,8 @@
-package org.example;
+package converter;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-import org.example.dto.Cashew;
+import converter.dto.Cashew;
 
 import java.io.FileReader;
 import java.io.IOException;

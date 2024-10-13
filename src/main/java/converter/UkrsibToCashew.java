@@ -1,7 +1,7 @@
-package org.example;
+package converter;
 
-import org.example.dto.Cashew;
-import org.example.dto.UkrsibOnline;
+import converter.dto.Cashew;
+import converter.dto.UkrsibOnline;
 
 import java.util.ArrayList;
 import java.util.List;
