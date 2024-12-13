@@ -1,20 +1,51 @@
 package converter;
 
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import com.opencsv.exceptions.CsvException;
 import converter.dto.UkrsibOnline;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ExcelReader {
 
-    public static List<UkrsibOnline> readExcel(String filePath) {
+    public List<UkrsibOnline> dynamicExcelFileReader(String name, String cardColor) {
+        String userHome = System.getProperty("user.home"); // Отримуємо шлях до поточного користувача
+        String downloadsFolder = userHome + "\\Downloads\\report\\ukrsib" + "\\" + name + "\\" + "Debet" + "\\"; // Шлях до папки Downloads
+
+        // Створюємо шаблон для пошуку файлу
+        String filePrefix = "Список операцій по рахунку 26208810325732";
+        String fileExtension = ".xlsx";
+
+        // Шукаємо файл за шаблоном у теці Downloads
+        Optional<File> file = ConverterApplication.findLatestFile(downloadsFolder, filePrefix, fileExtension);
+
+        // Якщо файл знайдений, читаємо його вміст
+        if (file.isPresent()) {
+            System.out.println("Файл знайдено: " + file.get().getName());
+            try {
+                // Парсимо файл CSV і повертаємо список MonoCSV
+                return parseExcelFile(file.get());
+            } catch (IOException | CsvException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("\n" + "Файл не знайдено. " + downloadsFolder + filePrefix + fileExtension);
+        }
+        return new ArrayList<>();
+    }
+
+    public static List<UkrsibOnline> parseExcelFile(File excelFile) throws IOException, CsvException {
         List<UkrsibOnline> operations = new ArrayList<>();
 
-        try (FileInputStream fis = new FileInputStream(filePath);
+        try (FileInputStream fis = new FileInputStream(excelFile);
              Workbook workbook = new XSSFWorkbook(fis)) {
 
             Sheet sheet = workbook.getSheetAt(0); // Отримуємо перший лист
@@ -24,20 +55,24 @@ public class ExcelReader {
             for (int i = 1; i < rowCount; i++) {
                 Row row = sheet.getRow(i);
 
-                String dateTime = row.getCell(0).getStringCellValue();   // Дата і час операції
-                String details = row.getCell(1).getStringCellValue();    // Деталі операції
-                int mcc = (int) row.getCell(2).getNumericCellValue();    // MCC
-                double amountInCardCurrency = row.getCell(3).getNumericCellValue();  // Сума в валюті картки
-                double amountInOperationCurrency = row.getCell(4).getNumericCellValue(); // Сума в валюті операції
-                String currency = row.getCell(5).getStringCellValue();   // Валюта
-                Double exchangeRate = row.getCell(6) != null ? row.getCell(6).getNumericCellValue() : null; // Курс
-                Double commissionAmount = row.getCell(7) != null ? row.getCell(7).getNumericCellValue() : null; // Комісія
-                Double cashbackAmount = row.getCell(8) != null ? row.getCell(8).getNumericCellValue() : null; // Кешбек
-                double balanceAfterOperation = row.getCell(9).getNumericCellValue(); // Залишок після операції
+                String status = row.getCell(0).getStringCellValue();  // Статус операції
+                String dateTime = row.getCell(1).getStringCellValue();  // Дата операції
+                String details = row.getCell(2).getStringCellValue();   // Деталі операції
+                String account = row.getCell(3).getStringCellValue();   // Рахунок/картка
+                String category = row.getCell(4).getStringCellValue();   // Категорія операції
+                double amount = row.getCell(5).getNumericCellValue();  // Сума операції
+                String currency = row.getCell(6).getStringCellValue();   // Валюта операції
 
                 // Створюємо DTO і додаємо до списку
-                UkrsibOnline operation = new UkrsibOnline(dateTime, details, mcc, amountInCardCurrency,
-                        amountInOperationCurrency, currency, exchangeRate, commissionAmount, cashbackAmount, balanceAfterOperation);
+                UkrsibOnline operation = new UkrsibOnline(
+                        status,
+                        dateTime,
+                        details,
+                        account,
+                        category,
+                        amount,
+                        currency
+                );
                 operations.add(operation);
             }
 

@@ -16,9 +16,9 @@ import java.util.Optional;
 
 public class ConverterApplication {
 
-    public List<MonoCSV> dynamicFileReader() {
+    public List<MonoCSV> dynamicCSVFileReader(String name, String cardColor) {
         String userHome = System.getProperty("user.home"); // Отримуємо шлях до поточного користувача
-        String downloadsFolder = userHome + "\\Downloads"; // Шлях до папки Downloads
+        String downloadsFolder = userHome + "\\Downloads\\report\\mono" + "\\" + name + "\\" + cardColor + "\\"; // Шлях до папки Downloads
 
         // Створюємо шаблон для пошуку файлу
         String filePrefix = "report_";
@@ -37,7 +37,7 @@ public class ConverterApplication {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("Файл не знайдено.");
+            System.out.println("\n" + "Файл не знайдено. " + downloadsFolder + filePrefix + fileExtension);
         }
         return new ArrayList<>();
     }
@@ -76,7 +76,7 @@ public class ConverterApplication {
     }
 
     // Метод для пошуку останнього зміненого файлу за шаблоном
-    public Optional<File> findLatestFile(String directoryPath, String filePrefix, String fileExtension) {
+    public static Optional<File> findLatestFile(String directoryPath, String filePrefix, String fileExtension) {
         File directory = new File(directoryPath);
         File[] files = directory.listFiles((dir, name) -> name.startsWith(filePrefix) && name.endsWith(fileExtension));
 
@@ -94,17 +94,4 @@ public class ConverterApplication {
         return Optional.of(latestFile);
     }
 
-//    public void fileWriter(List<Cashew> cashew) {
-//        String outputFile = "src/main/resources/Cashew.csv";
-//        // Запис у файл з кінця
-//        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8))) {
-//            for (int i = rows.size() - 1; i >= 0; i--) {
-//                writer.write(rows.get(i).toString() + "\n");
-//            }
-//            System.out.println("Conversion completed successfully.");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
 }
