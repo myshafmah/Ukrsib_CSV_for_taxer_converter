@@ -1,18 +1,24 @@
 package converter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CsvConverter {
+
+    private static final Logger logger = LogManager.getLogger(CsvConverter.class);
+
     public static void main(String[] args) {
         String inputFile = "src/main/resources/statements.csv";
         String outputFile = "src/main/resources/Taxer.csv";
 
         File input = new File(inputFile);
         if (!input.exists() || input.isDirectory()) {
-            System.err.println("Input file does not exist or is a directory.");
+            logger.error("Input file does not exist or is a directory: {}", inputFile);
             return;
         }
 
@@ -28,7 +34,7 @@ public class CsvConverter {
 
                 // Перевірка, чи достатньо елементів у масиві
                 if (columns.length < 17) {
-                    System.err.println("Skipping line with insufficient columns: " + line);
+                    logger.warn("Skipping line with insufficient columns: {}", line);
                     continue;
                 }
 
@@ -67,7 +73,7 @@ public class CsvConverter {
                 rows.add(row);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error while reading input file: {}", inputFile, e);
         }
 
         // Запис у файл з кінця
@@ -75,9 +81,9 @@ public class CsvConverter {
             for (int i = rows.size() - 1; i >= 0; i--) {
                 writer.write(rows.get(i).toString() + "\n");
             }
-            System.out.println("Conversion completed successfully.");
+            logger.info("Conversion completed successfully. Output: {}", outputFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error while writing output file: {}", outputFile, e);
         }
     }
 }

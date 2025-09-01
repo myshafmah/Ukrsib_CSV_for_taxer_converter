@@ -13,8 +13,12 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Runner {
+    private static final Logger logger = LogManager.getLogger(Runner.class);
+
     public static void main(String[] args) {
         // Шлях до вашого Excel-файлу
         String userHome = System.getProperty("user.home"); // Отримуємо шлях до поточного користувача
@@ -33,7 +37,7 @@ public class Runner {
             ukrsibWriter(ukrsibOnlineReader(Accounts.ukrsib_mysha), writer, Accounts.ukrsib_mysha);
             ukrsibWriter(ukrsibOnlineReader(Accounts.ukrsib_dasha), writer, Accounts.ukrsib_dasha);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error during writing output file", e);
         }
     }
 
@@ -57,7 +61,7 @@ public class Runner {
                             cashew.getAccount() +
                             "\n");
         }
-        System.out.println(accounts.getDescription() + ": Conversion completed successfully.");
+        logger.info("    " + accounts.getDescription() + ": Conversion completed successfully.");
     }
 
     private static void ukrsibWriter(List<UkrsibOnline> ukrsibOnlineList, BufferedWriter writer, Accounts accounts) throws IOException {
@@ -72,6 +76,6 @@ public class Runner {
                             cashew.getAccount() +
                             "\n");
         }
-        System.out.println(accounts.getDescription() + ": Conversion completed successfully.");
+        logger.info("    " + accounts.getDescription() + ": Conversion completed successfully.");
     }
 }

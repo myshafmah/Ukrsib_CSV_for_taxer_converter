@@ -10,7 +10,7 @@ public enum Accounts {
     white_mysha("White Mysha","Mysha","White"),
     mono_usd("mono USD","Mysha","USD"),
     ukrsib_bis_mysha("Ukrsib Business Mysha","Mysha",""),
-    ukrsib_mysha("UkrSib Mysha","Mysha","UkrSib Mysha"),
+    ukrsib_mysha("ЗП Black edition Mysha","Mysha","ЗП Black edition Mysha"),
     white_dasha("White Dasha","Dasha","White"),
     ukrsib_bis_dasha("Ukrsib Business Dasha","Dasha",""),
     ukrsib_dasha("Ukrsib Dasha","Dasha","Ukrsib Dasha"),

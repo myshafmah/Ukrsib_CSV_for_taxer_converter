@@ -2,6 +2,7 @@ package converter;
 
 import com.opencsv.exceptions.CsvException;
 import converter.dto.UkrsibOnline;
+import converter.util.FileUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -10,34 +11,38 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 public class ExcelReader {
 
+    private static final Logger logger = Logger.getLogger(ExcelReader.class.getName());
+
     public List<UkrsibOnline> dynamicExcelFileReader(String name, String cardColor) {
         String userHome = System.getProperty("user.home"); // Отримуємо шлях до поточного користувача
-        String downloadsFolder = userHome + "\\Downloads\\report\\ukrsib" + "\\" + name + "\\" + "Debet" + "\\"; // Шлях до папки Downloads
+        String downloadsFolder = Paths.get(userHome, "Downloads", "report", "ukrsib", name, "Debet").toString(); // Кросплатформений шлях
 
         // Створюємо шаблон для пошуку файлу
-        String filePrefix = "Список операцій по рахунку 26208810325732";
+        String filePrefix = "Список операцій";
         String fileExtension = ".xlsx";
 
         // Шукаємо файл за шаблоном у теці Downloads
-        Optional<File> file = ConverterApplication.findLatestFile(downloadsFolder, filePrefix, fileExtension);
+        Optional<File> file = FileUtils.findLatestFile(downloadsFolder, filePrefix, fileExtension);
 
         // Якщо файл знайдений, читаємо його вміст
         if (file.isPresent()) {
-            System.out.println("Файл знайдено: " + file.get().getName());
+            logger.info("Файл знайдено: " + file.get().getName());
             try {
-                // Парсимо файл CSV і повертаємо список MonoCSV
+                // Парсимо файл Excel і повертаємо список операцій
                 return parseExcelFile(file.get());
             } catch (IOException | CsvException e) {
-                e.printStackTrace();
+                logger.severe("Помилка читання Excel: " + e.getMessage());
             }
         } else {
-            System.out.println("\n" + "Файл не знайдено. " + downloadsFolder + filePrefix + fileExtension);
+            logger.fine("Файл не знайдено: " + downloadsFolder + File.separator + filePrefix + fileExtension);
         }
         return new ArrayList<>();
     }
@@ -77,7 +82,7 @@ public class ExcelReader {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.severe("Помилка читання Excel: " + e.getMessage());
         }
 
         return operations;
